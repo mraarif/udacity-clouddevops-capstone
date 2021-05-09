@@ -1,0 +1,56 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./backend
+    command: sh -c "cd headliner/ && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend/:/usr/src/backend/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+  redis:
+    image: redis:alpine
+
+  celery:
+    restart: always
+    build:
+      context: ./backend
+    command: sh -c "cd headliner/ && celery -A headliner worker -l info"
+    volumes:
+      - ./backend:/usr/src/worker/
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+      - web
+
+  celery-beat:
+    build: ./backend
+    command: sh -c "cd headliner/ && celery -A headliner beat -l info"
+    volumes:
+      - ./backend/:/usr/src/beat/
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+      - db
+      - web
+
+volumes:
+  postgres_data:
+
