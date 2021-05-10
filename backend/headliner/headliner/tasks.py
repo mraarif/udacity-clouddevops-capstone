@@ -25,7 +25,7 @@ def save_article(articles):
                                           published_at=article.get('publishedAt', ''),
                                           content=article.get('content', ''))
         except Exception as ex:
-            logger.error(ex)
+            logger.info(ex)
             continue
 
 
@@ -34,6 +34,7 @@ def seed_articles():
     try:
         response = requests.get(API_BASE_URL, headers={"x-api-key": API_KEY})
         if not response.ok:
+            logger.info(response)
             return
 
         response_json = json.loads(response.content)
