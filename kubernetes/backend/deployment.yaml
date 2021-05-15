@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-container
+  template:
+    metadata:
+      labels:
+        app: backend-container
+    spec:
+      containers:
+        - name: backend
+          image: mraarif/capstone-backend
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: dev-secrets
+          command: [ "/bin/sh" ]
+          args: [ "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000" ]

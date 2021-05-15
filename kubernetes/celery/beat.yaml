@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-beat
+  labels:
+    app: celery-beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: celery-beat
+  template:
+    metadata:
+      labels:
+        pod: celery-beat
+    spec:
+      containers:
+        - name: celery-beat
+          image: mraarif/capstone-celery-beat
+          command: ['celery', '-A', 'headliner', 'beat', '-l', 'debug']
+          envFrom:
+            - secretRef:
+                name: dev-secrets

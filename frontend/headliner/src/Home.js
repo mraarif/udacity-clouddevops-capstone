@@ -13,7 +13,8 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8000/news")
+        const apiUrl = process.env.NODE_ENV === 'kubernetes' ? 'http://backend-service:8000' : 'http://localhost:8000';
+        fetch(apiUrl)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -45,21 +46,21 @@ class Home extends Component {
         } else {
             return <div>
                 {
-                items.map((item, i) =>
-                    <div className="App">
-                        <Card className="bg-dark text-white">
-                            <Card.Img src={item.url_to_image} alt="Card image"/>
-                            <Card.ImgOverlay>
-                                <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
-                                    {item.content}
-                                </Card.Text>
-                                <Card.Text>{item.published_at}</Card.Text>
-                            </Card.ImgOverlay>
-                        </Card>
-                    </div>
-                )
-            }
+                    items.map((item, i) =>
+                        <div className="App">
+                            <Card className="bg-dark text-white">
+                                <Card.Img src={item.url_to_image} alt="Card image"/>
+                                <Card.ImgOverlay>
+                                    <Card.Title>{item.title}</Card.Title>
+                                    <Card.Text>
+                                        {item.content}
+                                    </Card.Text>
+                                    <Card.Text>{item.published_at}</Card.Text>
+                                </Card.ImgOverlay>
+                            </Card>
+                        </div>
+                    )
+                }
             </div>
         }
     }

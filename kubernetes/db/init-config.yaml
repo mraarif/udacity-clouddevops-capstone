@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-config
+  labels:
+    app: postgres
+data:
+  initdb.sql: |
+    DO
+    $do$
+    BEGIN
+       IF EXISTS (SELECT FROM pg_database WHERE datname = 'hello_django_dev') THEN
+          RAISE NOTICE 'Database already exists';  -- optional
+       ELSE
+          PERFORM dblink_exec('dbname=' || current_database()  -- current db
+                            , 'CREATE DATABASE hello_django_dev');
+       END IF;
+    END
+    $do$;
