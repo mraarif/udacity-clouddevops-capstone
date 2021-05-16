@@ -1,3 +1,6 @@
-from django.test import TestCase
+import pytest
 
-# Create your tests here.
+
+def test_divide_by_zero():
+    with pytest.raises(ZeroDivisionError):
+        x = 7 / 0  # pylint: disable=unused-variable

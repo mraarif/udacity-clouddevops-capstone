@@ -1,3 +1,4 @@
+import React from "react";
 import './App.css';
 import {Card} from "react-bootstrap";
 import {Component} from "react";
@@ -52,7 +53,7 @@ class Home extends Component {
             return <div>
                 {
                     items.map((item, i) =>
-                        <div className="App">
+                        <div key={i}>
                             <Card className="bg-dark text-white">
                                 <Card.Img src={item.url_to_image} alt="Card image"/>
                                 <Card.ImgOverlay>

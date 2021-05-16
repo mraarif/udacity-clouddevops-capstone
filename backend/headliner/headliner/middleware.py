@@ -1,4 +1,4 @@
-class CustomCorsMiddleware:
+class CustomCorsMiddleware:  # pylint: disable=too-few-public-methods
     def __init__(self, get_response):
         self.get_response = get_response
 

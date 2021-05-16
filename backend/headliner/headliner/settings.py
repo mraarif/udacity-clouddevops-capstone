@@ -129,10 +129,10 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-import django
+import django  # pylint: disable=wrong-import-position
 
 django.setup()
-import headliner.tasks
+import headliner.tasks  # pylint: disable=no-name-in-module, import-error, wrong-import-position, unused-import
 
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"

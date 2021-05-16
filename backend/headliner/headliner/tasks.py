@@ -5,7 +5,7 @@ import requests
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from api.news.models import Article, Source
+from api.news.models import Article, Source  # pylint: disable=import-error
 
 logger = get_task_logger(__name__)
 
