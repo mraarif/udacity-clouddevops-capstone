@@ -74,11 +74,9 @@ jobs:
           command: |
             docker-compose build
       - run:
-          environment:
-            DOCKERHUB_USERNAME: ${DOCKERHUB_USERNAME}
-            DOCKERHUB_PASSWORD: ${DOCKERHUB_PASSWORD}
           name: push to docker hub
           command: |
+            docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD
             docker push mraarif/capstone-backend
             docker push mraarif/capstone-celery
             docker push mraarif/capstone-celery-beat
@@ -128,15 +126,9 @@ jobs:
       - run:
           name: build image
           command: |
+            docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD
             export BACKEND_IP=$(cat backend-service.txt)
             docker-compose build frontend
-
-      - run:
-          environment:
-            DOCKERHUB_USERNAME: ${DOCKERHUB_USERNAME}
-            DOCKERHUB_PASSWORD: ${DOCKERHUB_PASSWORD}
-          name: push to docker hub
-          command: |
             docker push mraarif/capstone-frontend
 
   deploy-frontend-to-cluster:
