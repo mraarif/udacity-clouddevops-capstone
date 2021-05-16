@@ -1,3 +1,4 @@
+import React from "react";
 import './App.css';
 import {Card} from "react-bootstrap";
 import {Component} from "react";
@@ -49,10 +50,10 @@ class Home extends Component {
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
-            return <div>
+            return <div className="App">
                 {
                     items.map((item, i) =>
-                        <div className="App">
+                        <div key={i}>
                             <Card className="bg-dark text-white">
                                 <Card.Img src={item.url_to_image} alt="Card image"/>
                                 <Card.ImgOverlay>

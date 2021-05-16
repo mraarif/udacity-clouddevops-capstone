@@ -29,7 +29,7 @@ jobs:
           name: lint backend
           command: |
             cd backend
-            pip install pylint
+            pip install -r requirements.txt
             pylint headliner
 
   test-frontend:
