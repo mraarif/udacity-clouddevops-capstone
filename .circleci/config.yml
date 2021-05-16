@@ -190,7 +190,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
       - create-kubernetes-cluster:
           requires: [ build-push-docker-images ]
 
