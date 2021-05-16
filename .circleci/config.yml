@@ -63,9 +63,9 @@ jobs:
             pip install -r requirements.txt
             pytest headliner/api/news/tests.py
 
+
   build-push-docker-images:
-    docker:
-      - image: youpy/docker-compose-git
+    machine: true
     working_directory: /tmp/workspace
     steps:
       - checkout
@@ -119,8 +119,7 @@ jobs:
             - kubeconfig/kube_config.yaml
 
   build-push-frontend-image:
-    docker:
-      - image: youpy/docker-compose-git
+    machine: true
     working_directory: /tmp/workspace
     steps:
       - checkout
