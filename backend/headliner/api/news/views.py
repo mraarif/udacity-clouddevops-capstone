@@ -13,5 +13,5 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 class ArticleApiView(ListAPIView):
     serializer_class = ArticleSerializer
-    queryset = Article.objects.order_by("published_at")
+    queryset = Article.objects.order_by("published_at")  # pylint: disable=no-member
     pagination_class = StandardResultsSetPagination

@@ -50,7 +50,7 @@ class Home extends Component {
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
-            return <div className="App">
+            return <div>
                 {
                     items.map((item, i) =>
                         <div key={i}>
