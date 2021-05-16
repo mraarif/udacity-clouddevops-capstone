@@ -93,7 +93,7 @@ jobs:
             mkdir kubeconfig
             touch kubeconfig/kube_config.yaml
             export KUBECONFIG=kubeconfig/kube_config.yaml
-            eksctl create cluster -f cluster.yaml
+            eksctl create cluster -f cluster.yaml --name=capstone-${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: create kubernetes resources
           command: |
