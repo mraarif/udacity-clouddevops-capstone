@@ -13,8 +13,13 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        const apiUrl = process.env.NODE_ENV === 'kubernetes' ? 'http://backend-service:8000' : 'http://localhost:8000';
-        fetch(apiUrl)
+        let apiUrl = '';
+        if ('API_URL' in process.env) {
+           apiUrl = `http://${process.env.API_URL}:8000`;
+        } else {
+            apiUrl = 'http://localhost:8000';
+        }
+        fetch(`${apiUrl}/news`)
             .then(res => res.json())
             .then(
                 (result) => {
