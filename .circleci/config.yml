@@ -83,7 +83,7 @@ jobs:
 
   create-kubernetes-cluster:
     docker:
-      - image: alpine/k8s
+      - image: alpine/k8s:1.15.12
     working_directory: /tmp/workspace
     steps:
       - checkout
@@ -133,7 +133,7 @@ jobs:
 
   deploy-frontend-to-cluster:
     docker:
-      - image: alpine/k8s
+      - image: alpine/k8s:1.15.12
     working_directory: /tmp/workspace
     steps:
       - checkout
@@ -149,7 +149,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine/k8s
+      - image: alpine/k8s:1.15.12
     working_directory: /tmp/workspace
     steps:
       - checkout
