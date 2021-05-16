@@ -23,4 +23,4 @@ spec:
             - secretRef:
                 name: dev-secrets
           command: [ "/bin/sh" ]
-          args: [ "-c", "NODE_ENV='kubernetes' && npm start" ]
+          args: [ "-c", "npm start" ]

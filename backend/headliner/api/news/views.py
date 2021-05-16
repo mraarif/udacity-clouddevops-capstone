@@ -7,11 +7,11 @@ from .serializers import ArticleSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 1000
 
 
 class ArticleApiView(ListAPIView):
     serializer_class = ArticleSerializer
-    queryset = Article.objects.order_by('published_at')
+    queryset = Article.objects.order_by("published_at")
     pagination_class = StandardResultsSetPagination

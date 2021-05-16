@@ -12,5 +12,9 @@ RUN npm install react-scripts@3.4.1 -g --silent
 
 COPY headliner/ ./
 
+ARG BACKEND_IP
+
+ENV BACKEND_IP $BACKEND_IP
+
 
 CMD cd headliner && npm start

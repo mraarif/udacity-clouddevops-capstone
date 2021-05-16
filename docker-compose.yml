@@ -57,6 +57,8 @@ services:
     image: mraarif/capstone-frontend
     build:
       context: ./frontend
+      args:
+        BACKEND_IP: ${BACKEND_IP}
     volumes:
       - './frontend/:/usr/src/frontend'
       - '/usr/src/frontend/node_modules'

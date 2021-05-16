@@ -8,28 +8,53 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Source',
+            name="Source",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, verbose_name='name')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200, verbose_name="name")),
             ],
         ),
         migrations.CreateModel(
-            name='Article',
+            name="Article",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('author', models.CharField(max_length=250, verbose_name='author')),
-                ('title', models.CharField(max_length=300, verbose_name='title')),
-                ('url', models.URLField(max_length=300, verbose_name='url')),
-                ('url_to_image', models.URLField(max_length=300, verbose_name='image url')),
-                ('published_at', models.DateTimeField(verbose_name='published at')),
-                ('content', models.TextField(verbose_name='content')),
-                ('source', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='related_article', to='news.source')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("author", models.CharField(max_length=250, verbose_name="author")),
+                ("title", models.CharField(max_length=300, verbose_name="title")),
+                ("url", models.URLField(max_length=300, verbose_name="url")),
+                (
+                    "url_to_image",
+                    models.URLField(max_length=300, verbose_name="image url"),
+                ),
+                ("published_at", models.DateTimeField(verbose_name="published at")),
+                ("content", models.TextField(verbose_name="content")),
+                (
+                    "source",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="related_article",
+                        to="news.source",
+                    ),
+                ),
             ],
         ),
     ]

@@ -4,3 +4,4 @@ celery
 redis
 djangorestframework
 requests
+pylint
