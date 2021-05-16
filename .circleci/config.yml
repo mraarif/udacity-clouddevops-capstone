@@ -97,6 +97,7 @@ jobs:
       - run:
           name: create kubernetes resources
           command: |
+            export KUBECONFIG=kubeconfig/kube_config.yaml
             cd deploy
             kubectl apply -f dev-secrets.yaml
             kubectl apply -f redis/
@@ -176,14 +177,18 @@ workflows:
       - test-backend:
           requires: [ lint-backend ]
 
-      - build-push-docker-images:
+#      - build-push-docker-images:
+#          requires: [ test-frontend, test-backend ]
+#          filters:
+#            branches:
+#              only:
+#                - main
+      - create-kubernetes-cluster:
           requires: [ test-frontend, test-backend ]
           filters:
             branches:
               only:
                 - main
-      - create-kubernetes-cluster:
-          requires: [ build-push-docker-images ]
 
       - build-push-frontend-image:
           requires: [ create-kubernetes-cluster ]
