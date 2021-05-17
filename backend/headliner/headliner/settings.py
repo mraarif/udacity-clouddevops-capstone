@@ -140,6 +140,6 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_BEAT_SCHEDULE = {
     "seed_task": {
         "task": "headliner.tasks.seed_articles",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute="*/30"),
     }
 }

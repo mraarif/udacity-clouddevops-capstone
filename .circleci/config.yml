@@ -137,6 +137,7 @@ jobs:
           command: |
             docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
             export BACKEND_IP=$(cat backend-service.txt)
+            echo $BACKEND_IP
             docker-compose build frontend
             docker push mraarif/capstone-frontend
 
@@ -174,7 +175,7 @@ jobs:
             echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> frontend-service.txt
             BACKEND_IP=$(cat backend-service.txt)
             FRONTEND_IP=$(cat backend-service.txt)
-            curl "http://${BACKEND_IP}:8000/news"
+            curl "http://${BACKEND_IP}:8000"
             curl "http://${FRONTEND_IP}:3000"
 
 workflows:

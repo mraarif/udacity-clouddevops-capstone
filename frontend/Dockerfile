@@ -4,6 +4,8 @@ WORKDIR /usr/src/frontend
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /usr/src/frontend/node_modules/.bin:$PATH
+ARG BACKEND_IP
+ENV BACKEND_IP $BACKEND_IP
 
 COPY headliner/package.json ./
 COPY headliner/package-lock.json ./
@@ -12,9 +14,5 @@ RUN npm install react-scripts@3.4.1 -g --silent
 
 COPY headliner/ ./
 
-ARG BACKEND_IP
-
-ENV BACKEND_IP $BACKEND_IP
-
-
-CMD cd headliner && npm start
+RUN npm run build && npm install -g serve
+CMD serve -s build/
