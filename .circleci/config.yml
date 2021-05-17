@@ -93,11 +93,20 @@ jobs:
             mkdir kubeconfig
             touch kubeconfig/kube_config.yaml
             export KUBECONFIG=kubeconfig/kube_config.yaml
-            eksctl create cluster -f cluster.yaml
+
+            eksctl get cluster | grep capstone-cluster > output.txt
+            if [ -s output.txt ]
+            then
+              echo 'cluster  already exists skipping creation'
+            else
+              eksctl create cluster -f cluster.yaml
+            fi
+
       - run:
           name: create kubernetes resources
           command: |
             export KUBECONFIG=kubeconfig/kube_config.yaml
+            aws eks update-kubeconfig --name capstone-cluster
             cd deploy
             kubectl apply -f dev-secrets.yaml
             kubectl apply -f redis/
