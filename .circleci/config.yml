@@ -88,20 +88,22 @@ jobs:
     steps:
       - checkout
       - run:
+          name: store old cluster name
+          command: |
+            echo $(aws eks list-clusters | python3 -c "import sys, json; print(json.load(sys.stdin)['clusters'][0])") > cluster.txt
+
+      - run:
           name: create kubernetes cluster
           command: |
-            eksctl get cluster | grep capstone-cluster > output.txt || true
-            if [ -s output.txt ]
-            then
-              echo 'cluster  already exists skipping creation'
-            else
-              eksctl create cluster -f cluster.yaml
-            fi
+            # using cli to be able to specify unique name for cluster
+            eksctl create cluster --name="capstone-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --nodes-min=6 --nodes-max=8 \
+            --node-type=t3.medium
 
       - run:
           name: create kubernetes resources
           command: |
-            aws eks update-kubeconfig --name capstone-cluster
+            aws eks update-kubeconfig --name "capstone-${CIRCLE_WORKFLOW_ID:0:7}"
             export KUBECONFIG=/root/.kube/config
             cd deploy
             kubectl apply -f dev-secrets.yaml
@@ -130,6 +132,7 @@ jobs:
           paths:
             - backend-service.txt
             - kubeconfig/kube_config.yaml
+            - cluster.txt
 
   build-push-frontend-image:
     machine: true
@@ -193,6 +196,24 @@ jobs:
             curl -m 10 "http://${BACKEND_IP}:8000"
             curl -m 10 "http://${FRONTEND_IP}:3000"
 
+  delete-old-cluster:
+    docker:
+      - image: alpine/k8s:1.15.12
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: delete old clusters
+          command: |
+            aws eks update-kubeconfig --name capstone-cluster
+            export KUBECONFIG=/root/.kube/config
+
+            cluster_name=$(tr -d '\n' < cluster.txt)
+            eksctl delete cluster --name=$cluster_name
+
+
 workflows:
   default:
     jobs:
@@ -221,3 +242,6 @@ workflows:
 
       - smoke-test:
           requires: [ deploy-frontend-to-cluster ]
+
+      - delete-old-cluster:
+          requires: [ smoke-test ]
