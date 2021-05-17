@@ -90,9 +90,8 @@ jobs:
       - run:
           name: create kubernetes cluster
           command: |
-            mkdir kubeconfig
-            touch kubeconfig/kube_config.yaml
-            export KUBECONFIG=kubeconfig/kube_config.yaml
+            aws eks update-kubeconfig --name capstone-cluster
+            export KUBECONFIG=/root/.kube/config
 
             eksctl get cluster | grep capstone-cluster > output.txt
             if [ -s output.txt ]
@@ -105,8 +104,8 @@ jobs:
       - run:
           name: create kubernetes resources
           command: |
-            export KUBECONFIG=kubeconfig/kube_config.yaml
             aws eks update-kubeconfig --name capstone-cluster
+            export KUBECONFIG=/root/.kube/config
             cd deploy
             kubectl apply -f dev-secrets.yaml
             kubectl apply -f redis/
