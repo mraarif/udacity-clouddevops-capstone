@@ -105,15 +105,24 @@ jobs:
             export KUBECONFIG=/root/.kube/config
             cd deploy
             kubectl apply -f dev-secrets.yaml
+
             kubectl apply -f redis/
+            kubectl rollout status deployment redis
+
             kubectl apply -f db/
+            kubectl rollout status deployment postgres
+
             kubectl apply -f backend/
+            kubectl rollout status deployment backend
+
             kubectl apply -f celery/
+            kubectl rollout status deployment celery-worker
+            kubectl rollout status deployment celery-beat
 
       - run:
           name: add backend service ip to a file
           command: |
-            echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> backend-service.txt
+            echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > backend-service.txt
             cat backend-service.txt
 
       - persist_to_workspace:
@@ -133,6 +142,8 @@ jobs:
           name: build image
           command: |
             docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+            ls
+            cat backend-service.txt
             export BACKEND_IP=$(cat backend-service.txt)
             echo $BACKEND_IP
             docker-compose build frontend
@@ -168,10 +179,10 @@ jobs:
           command: |
             aws eks update-kubeconfig --name capstone-cluster
             export KUBECONFIG=/root/.kube/config
-            echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> backend-service.txt
-            echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> frontend-service.txt
-            BACKEND_IP=$(cat backend-service.txt)
-            FRONTEND_IP=$(cat backend-service.txt)
+            echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > backend-service.txt
+            echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > frontend-service.txt
+            BACKEND_IP=$(tr -d '\n' < backend-service.txt)
+            FRONTEND_IP=$(tr -d '\n' < frontend-service.txt)
             echo $BACKEND_IP
             echo $FRONTEND_IP
             echo "http://${BACKEND_IP}:8000"
@@ -190,14 +201,14 @@ workflows:
       - test-backend:
           requires: [ lint-backend ]
 
-      - build-push-docker-images:
-          requires: [ test-frontend, test-backend ]
-          filters:
-            branches:
-              only:
-                - main
+#      - build-push-docker-images:
+#          requires: [ test-frontend, test-backend ]
+#          filters:
+#            branches:
+#              only:
+#                - main
       - create-kubernetes-cluster:
-          requires: [ build-push-docker-images ]
+          requires: [ test-frontend, test-backend ]
 
       - build-push-frontend-image:
           requires: [ create-kubernetes-cluster ]
