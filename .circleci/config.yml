@@ -190,11 +190,22 @@ jobs:
             FRONTEND_IP=$(tr -d '\n' < frontend-service.txt)
             echo $BACKEND_IP
             echo $FRONTEND_IP
-            echo "http://${BACKEND_IP}:8000"
-            echo "http://${FRONTEND_IP}:3000"
+            backedn_url="http://${BACKEND_IP}:8000"
+            frontend_url="http://${FRONTEND_IP}:3000"
 
-            wget --spider "http://${BACKEND_IP}:8000/news/"
-            wget --spider "http://${FRONTEND_IP}:3000"
+            # backend app
+            if curl --output /dev/null --silent --head --fail "$backedn_url"; then
+              echo "URL exists: $backedn_url"
+            else
+              echo "URL does not exist: $backedn_url"
+            fi
+
+            # frontend app
+            if curl --output /dev/null --silent --head --fail "$frontend_url"; then
+              echo "URL exists: $frontend_url"
+            else
+              echo "URL does not exist: $frontend_url"
+            fi
 
   delete-old-cluster:
     docker:
