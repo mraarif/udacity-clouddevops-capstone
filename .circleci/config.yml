@@ -151,7 +151,8 @@ jobs:
       - run:
           name: update kubernetes cluster resources
           command: |
-            export KUBECONFIG=kubeconfig/kube_config.yaml
+            aws eks update-kubeconfig --name capstone-cluster
+            export KUBECONFIG=/root/.kube/config
             cd deploy
             kubectl apply -f frontend/
 
@@ -167,7 +168,8 @@ jobs:
       - run:
           name: smoke test frontend and backend services
           command: |
-            export KUBECONFIG=kubeconfig/kube_config.yaml
+            aws eks update-kubeconfig --name capstone-cluster
+            export KUBECONFIG=/root/.kube/config
             echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> backend-service.txt
             echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> frontend-service.txt
             BACKEND_IP=$(cat backend-service.txt)
