@@ -163,7 +163,7 @@ jobs:
       - run:
           name: update kubernetes cluster resources
           command: |
-            aws eks update-kubeconfig --name capstone-cluster
+            aws eks update-kubeconfig --name "capstone-${CIRCLE_WORKFLOW_ID:0:7}"
             export KUBECONFIG=/root/.kube/config
             cd deploy
 
@@ -182,7 +182,7 @@ jobs:
       - run:
           name: smoke test frontend and backend services
           command: |
-            aws eks update-kubeconfig --name capstone-cluster
+            aws eks update-kubeconfig --name "capstone-${CIRCLE_WORKFLOW_ID:0:7}"
             export KUBECONFIG=/root/.kube/config
             echo "$(kubectl get services backend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > backend-service.txt
             echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > frontend-service.txt
