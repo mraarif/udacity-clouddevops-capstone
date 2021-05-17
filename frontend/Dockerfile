@@ -5,7 +5,7 @@ WORKDIR /usr/src/frontend
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /usr/src/frontend/node_modules/.bin:$PATH
 ARG BACKEND_IP
-ENV BACKEND_IP $BACKEND_IP
+ENV REACT_APP_BACKEND_IP $BACKEND_IP
 
 COPY headliner/package.json ./
 COPY headliner/package-lock.json ./

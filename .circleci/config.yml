@@ -144,7 +144,7 @@ jobs:
             docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
             ls
             cat backend-service.txt
-            export BACKEND_IP=$(cat backend-service.txt)
+            export BACKEND_IP=$(tr -d '\n' < backend-service.txt)
             echo $BACKEND_IP
             docker-compose build frontend
             docker push mraarif/capstone-frontend

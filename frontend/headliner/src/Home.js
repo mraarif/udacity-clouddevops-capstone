@@ -15,8 +15,8 @@ class Home extends Component {
 
     componentDidMount() {
         let apiUrl = '';
-        if ('BACKEND_IP' in process.env) {
-           apiUrl = `http://${process.env.BACKEND_IP}:8000`;
+        if ('REACT_APP_BACKEND_IP' in process.env) {
+           apiUrl = `http://${process.env.REACT_APP_BACKEND_IP}:8000`;
         } else {
             apiUrl = 'http://localhost:8000';
         }
