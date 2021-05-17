@@ -193,8 +193,8 @@ jobs:
             echo "http://${BACKEND_IP}:8000"
             echo "http://${FRONTEND_IP}:3000"
 
-            curl -m 10 "http://${BACKEND_IP}:8000"
-            curl -m 10 "http://${FRONTEND_IP}:3000"
+            wget --spider "http://${BACKEND_IP}:8000/news/"
+            wget --spider "http://${FRONTEND_IP}:3000"
 
   delete-old-cluster:
     docker:
