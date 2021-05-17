@@ -90,7 +90,7 @@ jobs:
       - run:
           name: create kubernetes cluster
           command: |
-            eksctl get cluster | grep capstone-cluster > output.txt
+            eksctl get cluster | grep capstone-cluster > output.txt || true
             if [ -s output.txt ]
             then
               echo 'cluster  already exists skipping creation'
