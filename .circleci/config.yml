@@ -91,6 +91,7 @@ jobs:
           name: store old cluster name
           command: |
             echo $(aws eks list-clusters | python3 -c "import sys, json; print(json.load(sys.stdin)['clusters'][0])") > cluster.txt
+            cat cluster.txt
 
       - run:
           name: create kubernetes cluster
@@ -218,7 +219,7 @@ jobs:
       - run:
           name: delete old clusters
           command: |
-            aws eks update-kubeconfig --name capstone-cluster
+            aws eks update-kubeconfig --name "capstone-${CIRCLE_WORKFLOW_ID:0:7}"
             export KUBECONFIG=/root/.kube/config
 
             cluster_name=$(tr -d '\n' < cluster.txt)
