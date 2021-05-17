@@ -175,6 +175,11 @@ jobs:
             echo "$(kubectl get services frontend-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> frontend-service.txt
             BACKEND_IP=$(cat backend-service.txt)
             FRONTEND_IP=$(cat backend-service.txt)
+            echo $BACKEND_IP
+            echo $FRONTEND_IP
+            echo "http://${BACKEND_IP}:8000"
+            echo "http://${FRONTEND_IP}:3000"
+
             curl "http://${BACKEND_IP}:8000"
             curl "http://${FRONTEND_IP}:3000"
 
@@ -188,18 +193,14 @@ workflows:
       - test-backend:
           requires: [ lint-backend ]
 
-#      - build-push-docker-images:
-#          requires: [ test-frontend, test-backend ]
-#          filters:
-#            branches:
-#              only:
-#                - main
-      - create-kubernetes-cluster:
+      - build-push-docker-images:
           requires: [ test-frontend, test-backend ]
           filters:
             branches:
               only:
                 - main
+      - create-kubernetes-cluster:
+          requires: [ build-push-docker-images ]
 
       - build-push-frontend-image:
           requires: [ create-kubernetes-cluster ]
