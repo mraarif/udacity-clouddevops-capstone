@@ -163,7 +163,9 @@ jobs:
             aws eks update-kubeconfig --name capstone-cluster
             export KUBECONFIG=/root/.kube/config
             cd deploy
+
             kubectl apply -f frontend/
+            kubectl rollout status deployment frontend
 
 
   smoke-test:
@@ -188,8 +190,8 @@ jobs:
             echo "http://${BACKEND_IP}:8000"
             echo "http://${FRONTEND_IP}:3000"
 
-            curl "http://${BACKEND_IP}:8000"
-            curl "http://${FRONTEND_IP}:3000"
+            curl -m 10 "http://${BACKEND_IP}:8000"
+            curl -m 10 "http://${FRONTEND_IP}:3000"
 
 workflows:
   default:
@@ -201,14 +203,15 @@ workflows:
       - test-backend:
           requires: [ lint-backend ]
 
-#      - build-push-docker-images:
-#          requires: [ test-frontend, test-backend ]
-#          filters:
-#            branches:
-#              only:
-#                - main
-      - create-kubernetes-cluster:
+      - build-push-docker-images:
           requires: [ test-frontend, test-backend ]
+          filters:
+            branches:
+              only:
+                - main
+
+      - create-kubernetes-cluster:
+          requires: [ build-push-docker-images ]
 
       - build-push-frontend-image:
           requires: [ create-kubernetes-cluster ]
